@@ -33,7 +33,7 @@ class Dijkstra
                 }
             }
         }
-        return minimumCost;  // Moved outside the while loop
+        return minimumCost;  
     }
 
 
