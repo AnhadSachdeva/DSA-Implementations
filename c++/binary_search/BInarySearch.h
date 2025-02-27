@@ -1,132 +1,103 @@
 #ifndef BINARYSEARCH_H
 #define BINARYSEARCH_H
 
-using namespace std;
+/*
+Time Complexity O(logn)
+
+*/
 
 #include <vector>
+using namespace std;
 
 class BinarySearch {
+public:
+    int binarySearch(vector<int>& nums, int target) {
+        int left = 0;
+        int right = nums.size() - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            else if (nums[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
 
-    public:
-        // Finds the index of target in a sorted array nums. Returns -1 if not found.
-        int binarySearch(vector<int>& nums, int target){
-            int left = 0;
-            int right = nums.size()-1;
+    int lowerBound(vector<int>& nums, int target) {
+        if (nums.empty()) return -1;
+        int left = 0;
+        int right = nums.size() - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] >= target) right = mid;
+            else left = mid + 1;
+        }
+        return (nums[left] >= target) ? left : -1;
+    }
 
-            while(left <= right){
-                int mid = left + (right - left) /2;
+    int upperBound(vector<int>& nums, int target) {
+        if (nums.empty()) return -1;
+        int left = 0;
+        int right = nums.size() - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] > target) right = mid;
+            else left = mid + 1;
+        }
+        return (nums[left] > target) ? left : -1;
+    }
 
-                if(nums[mid] == target) return mid;
-                else if(nums[mid] < target){
-                    left = mid + 1;
-                } else {
-                    right = mid - 1;
-                }
+    int firstLessThan(vector<int>& nums, int target) {
+        if (nums.empty()) return -1;
+        int left = 0;
+        int right = nums.size() - 1;
+        int result = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] >= target) right = mid - 1;
+            else {
+                result = mid;
+                left = mid + 1;
             }
-
-            return -1;
         }
-        // Returns the smallest index where nums[index] >= target. Useful for finding the first occurrence or insertion point.
-        int lowerBound(vector<int>& nums, int target){
-            int left = 0;
-            int right = nums.size()-1;
+        return result;
+    }
 
-            while(left < right){
-                int mid = left + (right - left) /2;
-
-                if(nums[mid] >= target){
-                    right = mid;
-                } else {
-                    left = mid + 1;
-                }
+    int searchRotatedArray(vector<int>& nums, int target) {
+        if (nums.empty()) return -1;
+        int left = 0;
+        int right = nums.size() - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            if (nums[left] <= nums[mid]) {
+                if (target < nums[mid] && nums[left] <= target) right = mid - 1;
+                else left = mid + 1;
+            } else {
+                if (target > nums[mid] && nums[right] >= target) left = mid + 1;
+                else right = mid - 1;
             }
-            return (nums[left] >= target) ? left : -1;
         }
-        // Returns the smallest index where nums[index] > target. Useful for finding the position after the last occurrence.
-        int upperBound(vector<int>& nums, int target){
-                    int left = 0;
-            int right = nums.size()-1;
+        return -1;
+    }
 
-            while(left < right){
-                int mid = left + (right - left) /2;
-
-                if(nums[mid] > target){
-                    right = mid;
-                } else {
-                    left = mid + 1;
-                }
-            }
-            return (nums[left] > target) ? left : -1;
-        }
-        // Returns the largest index where nums[index] < target. Useful for finding the largest value smaller than the target.
-        int firstLessThan(vector<int>& nums, int target){
-            int left = 0;
-            int right = nums.size()-1;
-            int result = -1;
-            while(left <= right){
-                int mid = left + (right - left) /2;
-
-                if(nums[mid] >= target){
-                    right = mid - 1;
-                } else {
-                    result = mid;
-                    left = mid + 1;
-                    
-
-                }
-            }
-            return result;
-        }
-        // Finds the index of target in a rotated sorted array (e.g., [4, 5, 6, 1, 2, 3]).
-        int searchRotatedArray(vector<int>& nums, int target){
-            int left = 0;
-            int right = nums.size()-1;
-
-            while(left <= right){
-                int mid = left + (right - left)/2;
-
-                if(nums[mid] == target){
-                    return mid;
-                }
-
-                // left side is sorted
-                if(nums[left] <= nums[mid]){
-                    // answer is in [left,mid)
-                    if(target < nums[mid] && nums[left] <= target){
-                        right = mid - 1;
-                    } else {
-                        left = mid + 1;
-                    }
-                } else {
-                     // answer is in (mid,right]
-                    if(target > nums[mid] && nums[right] >= target){
-                        left = mid + 1;
-                    } else {
-                        right = mid - 1;
-                    }
-                }
-
-            }
-
-            return -1;
-
-        }
-
-        int findMinSubarray(vector<int>& nums, int target){
-
-        }
-       
-
-       int binarySearchRecursive(vector<int>& nums, int target){
-
-       }
-        
+    int binarySearchRecursive(vector<int>& nums, int target) {
+        if (nums.empty()) return -1;
+        return binarySearchRecursiveHelper(nums, target, 0, nums.size() - 1);
+    }
 
 
-
+private:
+    int binarySearchRecursiveHelper(vector<int>& nums, int target, int left, int right) {
+        if (left > right) return -1;
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) return mid;
+        if (nums[mid] < target)
+            return binarySearchRecursiveHelper(nums, target, mid + 1, right);
+        return binarySearchRecursiveHelper(nums, target, left, mid - 1);
+    }
 
 
 };
-
 
 #endif
