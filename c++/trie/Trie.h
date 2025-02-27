@@ -16,6 +16,18 @@ struct TrieNode {
 };
 
 
+/*
+
+Time Complexity => 
+    Insert => O(C) 
+    Search => O(C)
+Space Complexity => O(C*W)
+    - C = no of chars in a word
+    - W = no of words;
+
+*/
+
+
 class Trie {
 
     TrieNode* head;
