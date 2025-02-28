@@ -47,7 +47,7 @@ class UnionFind {
     }
 
     // Combining the two nodes parents
-    void unionfy(int x, int y){
+    void unite(int x, int y){
         int rootX = find(x);
         int rootY = find(y);
 
